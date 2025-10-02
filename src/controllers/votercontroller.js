@@ -264,56 +264,7 @@ const getPartNames = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get all voters with pagination
-// @route   GET /api/v1/voters
-// @access  Private
-const getVoters = asyncHandler(async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 20;
-  const q = (req.query.q || '').trim();
-
-  const filter = {};
-  if (q) {
-    filter.$or = [
-      { 'Name': { $regex: q, $options: 'i' } },
-      { 'Number': { $regex: q, $options: 'i' } },
-      { 's.Name': { $regex: q, $options: 'i' } },
-      { 's.Number': { $regex: q, $options: 'i' } },
-    ];
-  }
-
-  const [voters, total] = await Promise.all([
-    Voter.find(filter).skip((page - 1) * limit).limit(limit),
-    Voter.countDocuments(filter),
-  ]);
-
-  // Calculate gender summary
-  const maleCount = await Voter.countDocuments({ $or: [{ sex: 'Male' }, { 's.sex': 'Male' }] });
-  const femaleCount = await Voter.countDocuments({ $or: [{ sex: 'Female' }, { 's.sex': 'Female' }] });
-  const otherCount = await Voter.countDocuments({ $or: [{ sex: 'Third' }, { 's.sex': 'Third' }] });
-
-  res.json({
-    success: true,
-    data: voters,
-    pagination: {
-      currentPage: page,
-      totalPages: Math.ceil(total / limit),
-      totalCount: total,
-      limit,
-      hasNext: page * limit < total,
-      hasPrev: page > 1
-    },
-    genderSummary: {
-      male: maleCount,
-      female: femaleCount,
-      other: otherCount,
-      total: total
-    }
-  });
-});
-
 module.exports = {
-  getVoters,
   searchVoters,
   getVoterById,
   getVotersByPart,

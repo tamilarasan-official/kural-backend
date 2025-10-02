@@ -1,6 +1,5 @@
 const express = require('express');
 const {
-  getVoters,
   searchVoters,
   getVoterById,
   getVotersByPart,
@@ -13,10 +12,6 @@ const router = express.Router();
 
 // All routes are protected - temporarily disabled for testing
 // router.use(protect);
-
-// Basic voter routes
-router.route('/')
-  .get(getVoters);
 
 // Voter search routes
 router.route('/search')
