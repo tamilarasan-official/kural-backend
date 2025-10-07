@@ -14,13 +14,10 @@ const SoonVoterSchema = new mongoose.Schema({
   address: { type: String },
   gender: { type: String, enum: ['male', 'female', 'other'], lowercase: true },
   remarks: { type: String },
-  location: {
-    type: { type: String, enum: ['Point'], default: 'Point' },
-    coordinates: { type: [Number], default: undefined }, // [lng, lat]
-  },
+  // location removed per requirement
 }, { timestamps: true, versionKey: false, collection: 'soon_voter' });
 
-SoonVoterSchema.index({ location: '2dsphere' });
+
 
 module.exports = mongoose.model('SoonVoter', SoonVoterSchema);
 

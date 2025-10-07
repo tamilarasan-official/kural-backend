@@ -17,14 +17,8 @@ exports.create = async (req, res, next) => {
     // Normalize gender
     if (payload.gender) payload.gender = String(payload.gender).toLowerCase();
 
-    // Handle optional location: only keep if valid [lng, lat]
-    if (payload.location) {
-      const coords = payload.location.coordinates;
-      const isValid = Array.isArray(coords) && coords.length === 2 &&
-        coords.every((n) => typeof n === 'number' && !isNaN(n));
-      if (!isValid) delete payload.location;
-      else payload.location = { type: 'Point', coordinates: [coords[0], coords[1]] };
-    }
+    // Remove location field entirely (schema no longer contains location)
+    if (payload.location) delete payload.location;
 
     const doc = await SoonVoter.create(payload);
     res.json({ success: true, data: doc });
