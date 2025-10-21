@@ -10,22 +10,161 @@ const { protect } = require('../middleware/auth');
 
 const router = express.Router();
 
-// All routes are protected - temporarily disabled for testing
-// router.use(protect);
+/**
+ * @swagger
+ * tags:
+ *   name: Voter
+ *   description: Voter endpoints
+ */
 
-// Voter search routes
+/**
+ * @swagger
+ * /voter/search:
+ *   post:
+ *     tags: [Voter]
+ *     summary: Search voters
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Name:
+ *                 type: string
+ *               partNo:
+ *                 type: string
+ *           example:
+ *             Name: John
+ *             partNo: "1"
+ *     responses:
+ *       200:
+ *         description: List of voters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                   Name:
+ *                     type: string
+ *       429:
+ *         description: Too many requests
+ */
 router.route('/search')
   .post(searchVoters);
 
+/**
+ * @swagger
+ * /voter/part-names:
+ *   get:
+ *     tags: [Voter]
+ *     summary: Get all part names
+ *     responses:
+ *       200:
+ *         description: List of part names
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ */
 router.route('/part-names')
   .get(getPartNames);
 
+/**
+ * @swagger
+ * /voter/by-part/{partNumber}:
+ *   get:
+ *     tags: [Voter]
+ *     summary: Get voters by part number
+ *     parameters:
+ *       - in: path
+ *         name: partNumber
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of voters in part
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                   Name:
+ *                     type: string
+ *       404:
+ *         description: Part not found
+ */
 router.route('/by-part/:partNumber')
   .get(getVotersByPart);
 
+/**
+ * @swagger
+ * /voter/stats/{partNumber}:
+ *   get:
+ *     tags: [Voter]
+ *     summary: Get gender stats for a part
+ *     parameters:
+ *       - in: path
+ *         name: partNumber
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Gender stats
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 male:
+ *                   type: number
+ *                 female:
+ *                   type: number
+ *       404:
+ *         description: Part not found
+ */
 router.route('/stats/:partNumber')
   .get(getPartGenderStats);
 
+/**
+ * @swagger
+ * /voter/{id}:
+ *   get:
+ *     tags: [Voter]
+ *     summary: Get voter by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Voter found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                 Name:
+ *                   type: string
+ *       404:
+ *         description: Voter not found
+ */
 router.route('/:id')
   .get(getVoterById);
 

@@ -10,6 +10,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
 const logger = require('./utils/logger');
 const config = require('../config/config');
+const { swaggerUi, specs } = require('../../swagger');
 
 // Import models to ensure they're connected
 require('./models/Profile');
@@ -105,6 +106,9 @@ app.get('/health', (req, res) => {
         version: process.env.npm_package_version || '1.0.0'
     });
 });
+
+// Swagger documentation route
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // API routes
 app.use('/api/v1/auth', authRoutes);
