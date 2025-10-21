@@ -272,10 +272,46 @@ const getPartNames = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Get voters by age range
+// @route   GET /api/v1/voters/by-age-range?minAge=60&maxAge=120
+// @access  Private
+const getVotersByAgeRange = asyncHandler(async (req, res) => {
+  const minAge = parseInt(req.query.minAge) || 60;
+  const maxAge = parseInt(req.query.maxAge) || 120;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 100;
+
+  try {
+    const query = { age: { $gte: minAge, $lte: maxAge } };
+    const total = await Voter.countDocuments(query);
+    const voters = await Voter.find(query)
+      .sort({ sr: 1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean();
+
+    res.status(200).json({
+      success: true,
+      voters,
+      pagination: {
+        current: page,
+        pages: Math.ceil(total / limit),
+        total
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch voters by age range'
+    });
+  }
+});
+
 module.exports = {
   searchVoters,
   getVoterById,
   getVotersByPart,
   getPartGenderStats,
-  getPartNames
+  getPartNames,
+  getVotersByAgeRange
 };

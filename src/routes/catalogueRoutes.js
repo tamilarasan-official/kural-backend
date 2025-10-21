@@ -1,10 +1,10 @@
 const express = require('express');
-const { 
-  listCatalogueItems, 
-  getCatalogueItem, 
-  createCatalogueItem, 
-  updateCatalogueItem, 
-  deleteCatalogueItem 
+const {
+    listCatalogueItems,
+    getCatalogueItem,
+    createCatalogueItem,
+    updateCatalogueItem,
+    deleteCatalogueItem
 } = require('../controllers/catalogueController');
 
 const router = express.Router();
@@ -42,7 +42,7 @@ const router = express.Router();
  *         description: Too many requests
  */
 router.route('/')
-  .get(listCatalogueItems)
+    .get(listCatalogueItems)
 
 /**
  * @swagger
@@ -70,7 +70,7 @@ router.route('/')
  *       400:
  *         description: Bad request
  */
-  .post(createCatalogueItem);
+.post(createCatalogueItem);
 
 /**
  * @swagger
@@ -102,7 +102,7 @@ router.route('/')
  *         description: Item not found
  */
 router.route('/:id')
-  .get(getCatalogueItem)
+    .get(getCatalogueItem)
 
 /**
  * @swagger
@@ -138,7 +138,7 @@ router.route('/:id')
  *       404:
  *         description: Item not found
  */
-  .put(updateCatalogueItem)
+.put(updateCatalogueItem)
 
 /**
  * @swagger
@@ -158,7 +158,6 @@ router.route('/:id')
  *       404:
  *         description: Item not found
  */
-  .delete(deleteCatalogueItem);
+.delete(deleteCatalogueItem);
 
 module.exports = router;
-

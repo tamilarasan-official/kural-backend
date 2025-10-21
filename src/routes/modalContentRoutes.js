@@ -1,9 +1,9 @@
 const express = require('express');
 const {
-  getModalContent,
-  getAllModalContent,
-  createOrUpdateModalContent,
-  deleteModalContent
+    getModalContent,
+    getAllModalContent,
+    createOrUpdateModalContent,
+    deleteModalContent
 } = require('../controllers/modalContentController');
 
 const router = express.Router();
