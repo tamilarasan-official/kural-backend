@@ -4,7 +4,8 @@ const {
     getVoterById,
     getVotersByPart,
     getPartGenderStats,
-    getPartNames
+    getPartNames,
+    getVotersByAgeRange
 } = require('../controllers/voterController');
 const { protect } = require('../middleware/auth');
 
@@ -105,5 +106,34 @@ router.route('/stats/:partNumber').get(getPartGenderStats);
  *         description: Voter found
  */
 router.route('/:id').get(getVoterById);
+
+/**
+ * @swagger
+ * /voter/age-range:
+ *   get:
+ *     tags: [Voter]
+ *     summary: Get voters by age range
+ *     parameters:
+ *       - in: query
+ *         name: minAge
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: maxAge
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: List of voters in age range
+ */
+router.route('/age-range').get(getVotersByAgeRange);
 
 module.exports = router;

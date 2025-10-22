@@ -281,6 +281,7 @@ const getVotersByAgeRange = asyncHandler(async(req, res) => {
     const limit = parseInt(req.query.limit) || 100;
 
     try {
+        console.log('[getVotersByAgeRange] params', { minAge, maxAge, page, limit });
         const query = { age: { $gte: minAge, $lte: maxAge } };
         const total = await Voter.countDocuments(query);
         const voters = await Voter.find(query)
@@ -289,14 +290,14 @@ const getVotersByAgeRange = asyncHandler(async(req, res) => {
             .limit(limit)
             .lean();
 
+        console.log('[getVotersByAgeRange] total found', total, 'returning', voters.length);
+
         res.status(200).json({
             success: true,
             voters,
-            pagination: {
-                current: page,
-                pages: Math.ceil(total / limit),
-                total
-            }
+            total,
+            page,
+            pages: Math.ceil(total / limit)
         });
     } catch (error) {
         res.status(500).json({
