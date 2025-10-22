@@ -22,10 +22,34 @@ const listAge60AboveVoters = asyncHandler(async(req, res) => {
         Age60AboveVoter.countDocuments(filter),
     ]);
 
-    // Calculate gender summary - handle both root level and nested 's' object
-    const maleCount = await Age60AboveVoter.countDocuments({ $or: [{ sex: 'Male' }, { 's.sex': 'Male' }] });
-    const femaleCount = await Age60AboveVoter.countDocuments({ $or: [{ sex: 'Female' }, { 's.sex': 'Female' }] });
-    const otherCount = await Age60AboveVoter.countDocuments({ $or: [{ sex: 'Third' }, { 's.sex': 'Third' }] });
+    // Robust gender summary: normalize 'sex' value (case-insensitive) and consider nested 's.sex'
+    // Use aggregation to avoid missing variants like 'male', 'Male', 'M', etc.
+    const agg = await Age60AboveVoter.aggregate([{
+            $project: {
+                sexVal: {
+                    $toLower: {
+                        $ifNull: [
+                            '$sex',
+                            { $ifNull: ['$s.sex', null] }
+                        ]
+                    }
+                }
+            }
+        },
+        { $group: { _id: '$sexVal', count: { $sum: 1 } } }
+    ]);
+
+    let maleCount = 0,
+        femaleCount = 0,
+        otherCount = 0;
+    for (const row of agg) {
+        const id = row._id;
+        if (!id) continue;
+        if (id === 'male' || id === 'm') maleCount = row.count;
+        else if (id === 'female' || id === 'f') femaleCount = row.count;
+        else if (id === 'third' || id === 'other' || id === 't') otherCount += row.count;
+        else otherCount += row.count; // any unrecognized values count as 'other'
+    }
 
     res.json({
         success: true,
