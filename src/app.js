@@ -29,6 +29,7 @@ require('./models/fatherlessVoter');
 require('./models/guardianVoter');
 require('./models/mobileVoter');
 require('./models/age80AboveVoter');
+require('./models/age60AboveVoter');
 require('./models/catalogue');
 require('./models/soonVoter');
 
@@ -50,6 +51,7 @@ const fatherlessRoutes = require('./routes/fatherlessRoutes');
 const guardianRoutes = require('./routes/guardianRoutes');
 const mobileRoutes = require('./routes/mobileRoutes');
 const age80AboveRoutes = require('./routes/age80AboveRoutes');
+const age60AboveRoutes = require('./routes/age60AboveRoutes');
 const catalogueRoutes = require('./routes/catalogueRoutes');
 const soonVoterRoutes = require('./routes/soonVoterRoutes');
 
@@ -128,6 +130,7 @@ app.use('/api/v1/fatherless-voters', fatherlessRoutes);
 app.use('/api/v1/guardian-voters', guardianRoutes);
 app.use('/api/v1/mobile-voters', mobileRoutes);
 app.use('/api/v1/age80above-voters', age80AboveRoutes);
+app.use('/api/v1/age60above-voters', age60AboveRoutes);
 app.use('/api/v1/catalogue', catalogueRoutes);
 app.use('/api/v1/soon-voters', soonVoterRoutes);
 
